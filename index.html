@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="flipclock.css">
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+		<script src="flipclock.js"></script>		
+	</head>
+	<body>
+		<div class="clock" style="margin:2em;"></div>
+
+		<script type="text/javascript">
+			var clock;
+
+			$(document).ready(function() {
+
+				// Instantiate a counter
+				clock = new FlipClock($('.clock'), 3600, {
+					clockFace: 'MinuteCounter',
+					autoStart: true,
+					countdown: true
+				});
+				
+			});
+                        clock.stop(function() {
+                        // this (optional) callback will fire after the clock stops
+                        });
+                        
+		</script>
+		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+
+<script>
+  var socket = io();
+  $('form').submit(function(){
+    socket.emit('chat message', $('#m').val());
+    $('#m').val('');
+    return false;
+  });
+</script>
+	</body>
+</html> 
