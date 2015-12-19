@@ -1,14 +1,89 @@
 <html>
 	<head>
+                <link rel="stylesheet" href="style.css">
+
 		<link rel="stylesheet" href="flipclock.css">
 
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 		<script src="flipclock.js"></script>		
+                <style>
+           .message{
+                background-color:black;
+                font-size: 120;
+                height: 100%;
+                width:100%;
+                color:yellow;
+                padding:200;
+                display:none;
+                    
+            }
+                </style>
 	</head>
 	<body>
-		<div class="clock" style="margin:2em;"></div>
+            <!-- Lets make a simple stopwatch using CSS3 -->
+<!-- Time for the markup -->
+<!-- The core logic is a simple div containing numbers being moved
+using keyframe animations. The numbers have space between them so that they
+can be aligned vertically easily by reducing the container width. Lets
+wrap up the 'numbers' in a cell to display only 1 digit-->
 
+<!-- We will replicate the digits now -->
+<div class="container">
+	<!-- time to add the controls -->
+	<input id="start" name="controls" type="radio" />
+	<input id="stop" name="controls" type="radio" />
+	<input id="reset" name="controls" type="radio" />
+	<div class="timer">
+		<div class="cell">
+			<div class="numbers tenhour moveten">0 1 2 3 4 5 6 7 8 9</div>
+		</div>
+		<div class="cell">
+			<div class="numbers hour moveten">0 1 2 3 4 5 6 7 8 9</div>
+		</div>
+		<div class="cell divider"><div class="numbers">:</div></div>
+		<div class="cell">
+			<div class="numbers tenminute movesix">0 1 2 3 4 5 6</div>
+		</div>
+		<div class="cell">
+			<div class="numbers minute moveten">0 1 2 3 4 5 6 7 8 9</div>
+		</div>
+		<div class="cell divider"><div class="numbers">:</div></div>
+		<div class="cell">
+			<div class="numbers tensecond movesix">0 1 2 3 4 5 6</div>
+		</div>
+		<div class="cell">
+			<div class="numbers second moveten">0 1 2 3 4 5 6 7 8 9</div>
+		</div>
+		<div class="cell divider"><div class="numbers">:</div></div>
+		<div class="cell">
+			<div class="numbers milisecond moveten">0 1 2 3 4 5 6 7 8 9</div>
+		</div>
+		<div class="cell">
+			<div class="numbers tenmilisecond moveten">0 1 2 3 4 5 6 7 8 9</div>
+		</div>
+		<div class="cell">
+			<div class="numbers hundredmilisecond moveten">0 1 2 3 4 5 6 7 8 9</div>
+		</div>
+	</div>
+	<!-- Lables for the controls -->
+	<div id="timer_controls">
+		<label for="start">Start</label>
+		<label for="stop">Stop</label>
+		<label for="reset">Reset</label>
+	</div>
+</div>
+
+<!-- Lets load up prefixfree first -->
+<script src="http://thecodeplayer.com/uploads/js/prefixfree.js" type="text/javascript"></script>
+<!-- You can download it from http://leaverou.github.com/prefixfree/ -->
+                  <div class="message">sdsdsdsdsdsfdsfsdfsdfsdfsdfs</div>
+
+		<div class="clock" style="margin:2em;"></div>
+ <ul id="messages"></ul>
+<!--    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>-->
 		<script type="text/javascript">
 			var clock;
 
@@ -22,20 +97,47 @@
 				});
 				
 			});
-                        clock.stop(function() {
-                        // this (optional) callback will fire after the clock stops
-                        });
+                       
                         
 		</script>
 		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-
-<script>
-  var socket = io();
-  $('form').submit(function(){
-    socket.emit('chat message', $('#m').val());
-    $('#m').val('');
-    return false;
-  });
-</script>
+<!--    <button id="button">stop clock</button>
+    <button id="start1">start clock</button>-->
+  <script>
+      var socket = io();
+       $('#button').on('click',function(){
+          socket.emit('message','stop');
+          return false;
+      })
+       $('#start1').on('click',function(){
+          socket.emit('message','start');
+          return false;
+      })
+      $('form').submit(function(){
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');
+        return false;
+      });
+      socket.on('message', function(msg){
+        switch(msg){
+            case 'stop':clock.stop();
+                break;
+            case 'start':clock.start();
+                break;
+        }  
+         
+      })
+        socket.on('chat',function(msg){
+         
+          $('.message').html(msg).show();
+           console.log(msg);
+        setTimeout(function() {
+            $('.message').hide();
+        }, 5000);
+//        $('#messages').append($('<li>').text(msg));
+        
+      });
+     
+    </script>
 	</body>
 </html> 

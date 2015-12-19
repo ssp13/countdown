@@ -1,0 +1,62 @@
+
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+            <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+            <style>
+                .myCanvas{
+                    overflow-y: scroll;
+                    height:450px;
+                    width:600px;
+                        position:relative;
+                        
+                }
+                .canvas{
+                   
+                }
+                
+            </style>
+        <script src="tiff.js">
+                
+            </script>
+        <script src=""></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body ng-app="plunker">
+       <div ng-controller="MainCtrl">
+        TODO write content
+</div>
+        <div class="myCanvas"></div>
+        <script>
+           
+           
+    Tiff.initialize({TOTAL_MEMORY: 16777216 * 10});
+var deltaX=0;
+var deltaY=0;
+
+  var mouseStillDown = false;
+  var xhr = new XMLHttpRequest();
+xhr.responseType = 'arraybuffer';
+xhr.open('GET', "image.tif");
+xhr.onload = function (e) {
+        
+
+
+    var tiff = new Tiff({buffer: xhr.response});
+    var canvas = tiff.toCanvas();
+    $('.myCanvas').append(canvas);
+    $('canvas').css({ 'width':'600px',
+                    'position':'absolute',
+                    'height':'450px'})
+}; 
+
+        
+       
+xhr.send();
+
+
+            </script>
+            
+    </body>
+</html>
