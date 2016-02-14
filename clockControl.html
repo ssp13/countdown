@@ -1,453 +1,169 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Socket.IO chat</title>
-     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-      <!-- Compiled and minified CSS -->
+
+<head>
+  <title>Socket.IO chat</title>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
 
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
-   <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-   
-    <style>
-      /** { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-      body
-{
-  background-color:#f0f0f0;
-}*/
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 
+  <style>
 
-.perspective
-{
-   background: url("http://dc428.4shared.com/img/QWu4ziBq/s3/doorBorder.png");
-   position:absolute;         
-   background-repeat: no-repeat;
-    background-position: center center;
-    height: 274px;
-    width: 147px;
-    margin: 20px;
-    margin-left: 0px;
-    -webkit-perspective: 450;
-    border-radius: 3px;
-            box-sizing: border-box;
-        }
-        
-        .thumb
-        {
-            background: url("http://dc428.4shared.com/img/-vayshJ-/s3/ClassDoor.png");
-            background-repeat: no-repeat;
-            background-position: center center;
-            width: 147px;
-            height: 274px;
-            position: absolute;
-            box-sizing: border-box;
-            border-radius: 3px;
-            box-shadow: 0 0 0 10px rgba(255, 255, 255, .0) inset;
-            
-            transition: 1s transform linear;
-            transform-origin: left;
-            cursor: pointer;
-        }
-      
-        .thumbOpened
-        {
-            transform: rotateY(-60deg);
-            transform-origin: 8px;
-            transition: .5s linear;
-        }
+  </style>
+  <link rel="stylesheet" href="style.css">
+</head>
 
-.alert {
-padding: 8px 35px 8px 14px;
-margin-bottom: 20px;
-text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-background-color: #fcf8e3;
-border: 1px solid #fbeed5;
--webkit-border-radius: 4px;
--moz-border-radius: 4px;
-border-radius: 4px;
-  color: #000;
-  
-    transform-origin: left;
-  transform:rotateY(180deg);
-  opacity:0;
-  animation-name: go;
-  animation-duration: 0.5s;
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: forwards;
-  animation-delay: 0.5s;
-  width:350px;
-}
-@keyframes go {
-  100%{
-    opacity:1;
-    transform:rotateY(0deg);
-  }
-}
-.alarm2{
-    position:absolute;
-    width:18px;
-    height:18px;
-    left:30px;
-    top:50px;
-    border:16px solid red;
-    background-color:red;
-    border-radius:30px;
-    -webkit-border-radius:30px;
-    -webkit-animation:myfirst 1s;
-    -webkit-animation-timing-function:ease-out;
-    -webkit-animation-iteration-count:infinite;
-    opacity:0;
-}
-@-webkit-keyframes myfirst{
-    0% {transform:scale(0.1,0.1);opacity:0;}
-    50% {opacity:1;}
-    100% {transform:scale(1.2,1.2);opacity:0;}
-}
-.round-button {
-	width:7%;
-        
-}
-.round-button-circle {
-	width: 118%;
-	height:0;
-	padding-bottom: 100%;
-    border-radius: 55%;
-	border:10px solid #cfdcec;
-    overflow:hidden;
-    
-    background: #4679BD; 
-    box-shadow: 0 0 3px gray;
-}
-.round-button-circle:hover {
-	background:#30588e;
-}
-.round-button a {
-    display:block;
-	float:left;
-	width:100%;
-	padding-top:50%;
-    padding-bottom:50%;
-	line-height:1em;
-	margin-top:-0.5em;
-    
-	text-align:center;
-	color:#e2eaf3;
-    font-family:Verdana;
-    font-size:1.2em;
-    font-weight:bold;
-    text-decoration:none;
-}
-.chat{
-    border:solid 1px;
-    padding: 3px; 
-    
-    top: 40; 
-    width:40%;
-    word-wrap: break-word;
-}
-body { padding: 100px; background-color: #222; }
-.led-red {
-    margin: 20px auto;
-    width: 12px;
-    height: 12px;
-    background-color: #940;
-    border-radius: 50%;
-    box-shadow: #000 0 -1px 7px 1px, inset #600 0 -1px 9px, #F00 0 2px 12px;
-}
-
-.led-yellow {
-    margin: 20px auto;
-    width: 12px;
-    height: 12px;
-    background-color: #A90;
-    border-radius: 50%;
-    box-shadow: #000 0 -1px 7px 1px, inset #660 0 -1px 9px, #DD0 0 2px 12px;
-}
-
-.led-green {
-    margin: 20px auto;
-    width: 12px;
-    height: 12px;
-    background-color: #690;
-    border-radius: 50%;
-    box-shadow: #000 0 -1px 7px 1px, inset #460 0 -1px 9px, #7D0 0 2px 12px;
-}
-
-.led-blue {
-    margin: 20px auto;
-    width: 12px;
-    height: 12px;
-    background-color: #4AB;
-    border-radius: 50%;
-    box-shadow: #000 0 -1px 7px 1px, inset #006 0 -1px 9px, #06F 0 2px 14px;
-}
-
-
-.led-box {
-  height: 30px;
-  width: 25%;
-  margin: 10px 0;
-  float: left;
-}
-
-.led-box p {
-  font-size: 12px;
-  text-align: center;
-  margin: 1em;
-}
-
-.led-red {
-  margin: 0 auto;
-  width: 24px;
-  height: 24px;
-  background-color: #F00;
-  border-radius: 50%;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
-  -webkit-animation: blinkRed 0.5s infinite;
-  -moz-animation: blinkRed 0.5s infinite;
-  -ms-animation: blinkRed 0.5s infinite;
-  -o-animation: blinkRed 0.5s infinite;
-  animation: blinkRed 0.5s infinite;
-}
-
-@-webkit-keyframes blinkRed {
-    from { background-color: #F00; }
-    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
-    to { background-color: #F00; }
-}
-@-moz-keyframes blinkRed {
-    from { background-color: #F00; }
-    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
-    to { background-color: #F00; }
-}
-@-ms-keyframes blinkRed {
-    from { background-color: #F00; }
-    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
-    to { background-color: #F00; }
-}
-@-o-keyframes blinkRed {
-    from { background-color: #F00; }
-    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
-    to { background-color: #F00; }
-}
-@keyframes blinkRed {
-    from { background-color: #F00; }
-    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
-    to { background-color: #F00; }
-}
-
-.led-yellow {
-  margin: 0 auto;
-  width: 24px;
-  height: 24px;
-  background-color: #FF0;
-  border-radius: 50%;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #808002 0 -1px 9px, #FF0 0 2px 12px;
-  -webkit-animation: blinkYellow 1s infinite;
-  -moz-animation: blinkYellow 1s infinite;
-  -ms-animation: blinkYellow 1s infinite;
-  -o-animation: blinkYellow 1s infinite;
-  animation: blinkYellow 1s infinite;
-}
-
-@-webkit-keyframes blinkYellow {
-    from { background-color: #FF0; }
-    50% { background-color: #AA0; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #808002 0 -1px 9px, #FF0 0 2px 0; }
-    to { background-color: #FF0; }
-}
-@-moz-keyframes blinkYellow {
-    from { background-color: #FF0; }
-    50% { background-color: #AA0; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #808002 0 -1px 9px, #FF0 0 2px 0; }
-    to { background-color: #FF0; }
-}
-@-ms-keyframes blinkYellow {
-    from { background-color: #FF0; }
-    50% { background-color: #AA0; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #808002 0 -1px 9px, #FF0 0 2px 0; }
-    to { background-color: #FF0; }
-}
-@-o-keyframes blinkYellow {
-    from { background-color: #FF0; }
-    50% { background-color: #AA0; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #808002 0 -1px 9px, #FF0 0 2px 0; }
-    to { background-color: #FF0; }
-}
-@keyframes blinkYellow {
-    from { background-color: #FF0; }
-    50% { background-color: #AA0; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #808002 0 -1px 9px, #FF0 0 2px 0; }
-    to { background-color: #FF0; }
-}
-
-.led-green {
-  margin: 0 auto;
-  width: 24px;
-  height: 24px;
-  background-color: #ABFF00;
-  border-radius: 50%;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px;
-}
-
-.led-blue {
-  margin: 0 auto;
-  width: 24px;
-  height: 24px;
-  background-color: #24E0FF;
-  border-radius: 50%;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #006 0 -1px 9px, #3F8CFF 0 2px 14px;
-}
-    </style>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-      <!--<div style="width:40%"><img height="420" width="515" style="z-index:100;width:715px;height:400px;" ></div>-->
-      <!--<img height="410" width="415" style="z-index:100;width:715px;height:400px;left:800px" src="http://webcam.datainstituttet.no/axis-cgi/mjpg/video.cgi">
+<body>
+  <!--<div style="width:40%"><img height="420" width="515" style="z-index:100;width:715px;height:400px;" ></div>-->
+  <!--<img height="410" width="415" style="z-index:100;width:715px;height:400px;left:800px" src="http://webcam.datainstituttet.no/axis-cgi/mjpg/video.cgi">
             <img height="410" width="415" style="z-index:100;width:715px;height:400px;float:right" src="http://images.opentopia.com/cams/9694/big.jpg">-->
 
-     
-     <div class="">
-    <!--<form action="">
+
+  <!--<div class="">
+    <form action="">
       <input  id="m" autocomplete="off" /><button>Send</button>
     </form>-->
-   
-    <!--<div>
+
+    <div class="container">
       <div class="chat">
         <ol>
           <li id="messages"></li>
         </ol>
-    </div>-->
-    <div class="perspective" onclick="openDoor()" style="display:block">
-     <div class="thumb"></div>
-    </div>
-    <div class="container">
-     
-    <!--<div class="round-button"><div class="round-button-circle"><a href="#" id ="stop" class="round-button">Stop Clock</a></div></div>
+      </div>
+      <div class="perspective" onclick="openDoor()" style="display:block">
+        <div class="thumb"></div>
+      </div>
+      <div class="container">
+
+        <!--<div class="round-button"><div class="round-button-circle"><a href="#" id ="stop" class="round-button">Stop Clock</a></div></div>
     <div class="round-button"><div class="round-button-circle"><a href="#" id="start" class="round-button">start clock</a></div></div>-->
-    <ul class="collection">
-      <li class="collection-item">
-         <div>
-           Κουζίνα
-         </div>
-         
-         <hr>
-        <div class="row">
-          
-      <div class="col l1 s12" style="">
-       Πόρτα
-        <!--<div class="led-red"></div>-->
-        <div style="margin-top:20px;width:20%">
-        <div class="led-green" style="display:inline-block;"></div>
-        <!--<div class="led-red" style="display:inline-block"></div>-->
-        </div>
+        <ul class="collection">
+          <li class="collection-item">
+            <div>
+              Κουζίνα
+            </div>
+
+            <hr>
+            <div class="row">
+
+              <div class="col l1 s12" style="">
+                Πόρτα
+                <!--<div class="led-red"></div>-->
+                <div style="margin-top:20px;width:20%">
+                  <div class="led-green" style="display:inline-block;"></div>
+                  <div class="led-yellow" style="display:inline-block"></div>
+                </div>
+
+              </div>
+
+
+              <div class="col s4" style="margin:1.14rem 0 0.912rem 0;">
+                <audio src="alarm.mp3" controls>
+                  <p>Your browser does not support the <code>audio</code> element </p>
+                </audio>
+              </div>
+              <div class="col  l7 s12" style="margin:1.14rem 0 0.912rem 0;">
+                <form>
+
+                  <input id="check" type="checkbox" name="armed_door" value="on" />
+                  <label for="check">Enable Alarm on ring removal</label>
+
+                </form>
+
+          </li>
+          <li class="collection-item"></li>
+          <li class="collection-item">Alvin</li>
+          <li class="collection-item">Alvin</li>
+        </ul>
 
         </div>
-      
-  
-     <div class="col s4" style="margin:1.14rem 0 0.912rem 0;">
-     <audio src="alarm.mp3" controls >
-    <p>Your browser does not support the <code>audio</code> element </p>
-    </audio>
-    </div>
-      <div class="col  l7 s12" style="margin:1.14rem 0 0.912rem 0;">
-        <form>
-                 
-      <input id="check" type="checkbox" name="armed_door" value="on"/>
-       <label for="check">Enable Alarm on ring removal</label>
-     
-     </form>
-    
-    </li>
-      <li class="collection-item"></li>
-      <li class="collection-item">Alvin</li>
-      <li class="collection-item">Alvin</li>
-    </ul>
-   
-  </div>
 
-   
-    </div>
-    <script>
-      $(document).ready(function(){
-        $('#b').click(function(){
+
+        </div>
+        <script>
+$(document).ready(function(){
+  $('#b').click(function(){
+    $('.led-green').toggleClass("led-red")
+  })
+  var audio = new Audio('alarm.mp3');
+  var socket = io();
+  // $('#stop').on('click',function(e){
+  //     e.preventDefault();
+  //     socket.emit('message','stop'); 
+  // });
+  // $('#start').on('click',function(e){
+  //     e.preventDefault();
+  //     socket.emit('message','start'); 
+  // })
+  //   $('#stop').on('click',function(e){
+  //     e.preventDefault();
+  //     socket.emit('message','stop'); 
+  // })
+  function openDoor() {
+    $(".thumb").addClass("thumbOpened");
+  }
+  function closeDoor(){
+    $(".thumb").removeClass("thumbOpened");
+  }
+
+  $('#button').on('click',function(){
+      socket.emit('stop','stop');
+      return false;
+  })
+  if($('#check').is(':checked')){
+    alert()
+    armRingDoor()
+  }
+  function armRingDoor(){
+    socket.on('message', function(msg){
+      if(msg==="ring_detouched"){
           $('.led-green').toggleClass("led-red")
-        })
-      var audio = new Audio('alarm.mp3');
-      
-      
-           var socket = io();
-        $('#stop').on('click',function(e){
-            e.preventDefault();
-            socket.emit('message','stop'); 
-        });
-        $('#start').on('click',function(e){
-            e.preventDefault();
-            socket.emit('message','start'); 
-        })
-         $('#stop').on('click',function(e){
-            e.preventDefault();
-            socket.emit('message','stop'); 
-        })
-        var clock_door=false;
-        $('#check').on('click',function(){
-            clock_door=true;
-        });
-      function openDoor() {
-            $(".thumb").addClass("thumbOpened");
-         }
-        function closeDoor(){
-             $(".thumb").removeClass("thumbOpened");
-        }
+        audio.play();
+        myAudio.addEventListener('ended', function() {
+          audio.currentTime = 0;
+          audio.play();
+      }, false);
+         //openDoor();
+      }
+      if(msg==="ring_touch"){
+          $('.led-green').toggleClass("led-red")
+        openDoor();
+      }
      
-      $('#button').on('click',function(){
-          socket.emit('stop','stop');
-          return false;
-      })
-      $('form').submit(function(){
-        socket.emit('chat', $('#m').val());
-        $('#m').val('');
-        return false;
-      });
-      socket.on('message', function(msg){
-          if(msg==="door_opened"){
-             if(clock_door){
-                 socket.emit('message','stop');  
-             }
-              $('.led-green').toggleClass("led-red")
-                 audio.play();
-            openDoor();
-          }
-          if(msg==="door_closed") {
-              if(clock_door){
-                 socket.emit('message','start');  
-             }
-              closeDoor();
-                            $('.led-green').toggleClass("led-red")
-              audio.pause()
-          }
-        if($('#messages').height()>800){
-            $('#messages').html("")
-        }  
-        $('#messages').html($('<li>').text(msg));
-        
-      });
-      socket.on('news',function(msg){
-          if(msg.indexOf("opened")>-1) openDoor();
-           $('#messages').html($('<li>').text("door"+msg));
-           console.log(msg);
-      })
-      socket.on('chat',function(msg){
-         
-           $('#messages').html($('<li>').text("door"+msg));
-           console.log(msg);
-      })  
-      })
+      if(msg==="ring_placed") {
+          // if(clock_door){
+          //     socket.emit('message','start');  
+          // }
+          closeDoor();
+          $('.led-green').toggleClass("led-red")
+          audio.pause()
+      }
       
-    </script>
-    </div>
-  </body>
+    if($('#messages').height()>800){
+        $('#messages').html("")
+    }  
+    $('#messages').html($('<li>').text(msg));
+    
+  });
+  // socket.on('news',function(msg){
+  //     if(msg.indexOf("opened")>-1) openDoor();
+  //       $('#messages').html($('<li>').text("door "+msg));
+  //       console.log(msg);
+  // })
+  // socket.on('chat',function(msg){
+      
+  //       $('#messages').html($('<li>').text("door"+msg));
+  //       console.log(msg);
+  // })  
+  }
+  
+})
+        </script>
+      </div>
+</body>
+
 </html>

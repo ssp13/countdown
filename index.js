@@ -29,7 +29,8 @@ board.on("ready", function () {
   });
 
   button.on("down", function () {
-    io.emit('message', 'door_opened');
+    // io.emit('message', 'door_opened');
+    io.emit('message', 'ring_touch');
     console.log("down");
     door_closed = "opened";
   });
@@ -38,13 +39,15 @@ board.on("ready", function () {
   //        defaults to 500ms (1/2 second)
   //        set
   button.on("hold", function () {
+     io.emit('message', 'ring_placed');
     console.log("hold");
   });
 
   // "up" the button is released
   button.on("up", function () {
-    door_closed = "closed";
-    io.emit('message', 'door_closed');
+    // door_closed = "closed";
+    // io.emit('message', 'door_closed');
+    io.emit('message', 'ring_detouched');
     console.log("up");
   });
 });
@@ -62,18 +65,21 @@ app.get('/', function (req, res) {
 app.get('/clockControl.html', function (req, res) {
   res.sendFile(__dirname + '/clockControl.html');
 });
+app.get('/controlAlpha.html', function (req, res) {
+  res.sendFile(__dirname + '/controlAlpha.html');
+});
 
 
 io.on('connection', function (socket) {
-  socket.emit('news', door_closed);
-  socket.on('message', function (data) {
-    io.emit('message', data);
-    console.log(data);
-  });
-  socket.on('chat', function (data) {
-    io.emit('chat', data);
-    console.log(data);
-  });
+  // socket.emit('news', door_closed);
+  // socket.on('message', function (data) {
+  //   io.emit('message', data);
+  //   console.log(data);
+  // });
+  // socket.on('chat', function (data) {
+  //   io.emit('chat', data);
+  //   console.log(data);
+  // });
 
 
 });
