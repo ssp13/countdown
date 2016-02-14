@@ -106,6 +106,8 @@
             if ($('#check').is(':checked')) {
 
                 armRingDoor()
+            }else{
+                audio.stop();
             }
         })
 
@@ -140,7 +142,7 @@
                     audio.pause()
                 }
 
-                if ($('#messages').height() > 800) {
+                if ($('#messages').height() > 200) {
                     $('#messages').html("")
                 }
                 if (msg === "ring_placed") {
