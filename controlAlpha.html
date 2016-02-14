@@ -107,10 +107,14 @@
 
                 armRingDoor()
             }else{
-                audio.stop();
+disArm()
+                audio.pause();
             }
         })
-
+	function disArm(){
+	socket.removeListener('message');
+        }
+var start = new Date().getTime();
         function armRingDoor() {
 
             socket.on('message', function (msg) {
@@ -137,6 +141,10 @@
                     // }
                     console.log(msg)
                     closeDoor();
+ if(firstTime) start = new Date().getTime();
+                    var end = new Date().getTime();
+                    var time = end - start;
+                    console.log('Execution time: ' + time);
                     $('.led-green').toggleClass("led-red")
                     firstTime = false;
                     audio.pause()

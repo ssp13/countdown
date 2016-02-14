@@ -23,7 +23,10 @@ board.on("ready", function () {
 
 
 
-  button = new five.Button(2);
+  button = new five.Button({
+	pin:2,
+	isPullup:true	
+  });
   board.repl.inject({
     button: button
   });
