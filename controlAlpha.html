@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+<head>
+    <title>Socket.IO chat</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!--<div style="width:40%"><img height="420" width="515" style="z-index:100;width:715px;height:400px;" ></div>-->
+<!--<img height="410" width="415" style="z-index:100;width:715px;height:400px;left:800px" src="http://webcam.datainstituttet.no/axis-cgi/mjpg/video.cgi">
+<img height="410" width="415" style="z-index:100;width:715px;height:400px;float:right" src="http://images.opentopia.com/cams/9694/big.jpg">-->
+
+
+<!--<div class="">
+  <form action="">
+    <input  id="m" autocomplete="off" /><button>Send</button>
+  </form>-->
+
+<div class="container">
+    <div class="chat">
+        <ol>
+            <li id="messages"></li>
+        </ol>
+    </div>
+    <!--<div class="perspective" onclick="openDoor()" style="display:block">
+    <div class="thumb"></div>
+    </div>-->
+    <div class="container">
+    <!--<div class="round-button"><div class="round-button-circle"><a href="#" id ="stop" class="round-button">Stop Clock</a></div></div>
+    <div class="round-button"><div class="round-button-circle"><a href="#" id="start" class="round-button">start clock</a></div></div>-->
+        <ul class="collection">
+            <li class="collection-item">
+                <div>
+                    Κουζίνα
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col l2 s12" style="">
+                        Πόρτα
+                        <!--<div class="led-red"></div>-->
+                        <div style="margin-top:20px;width:20%">
+                            <div class="led-green" style="display:inline-block;"></div>
+                            <div class="led-yellow" style="display:inline-block"></div>
+                        </div>
+                    </div>
+                    <div class="col l6 s4" style="margin:1.14rem 0 0.912rem 0;">
+                        <audio src="alarm.mp3" controls>
+                            <p>Your browser does not support the <code>audio</code> element </p>
+                        </audio>
+                    </div>
+                    <div class="col  l3 s12" style="margin:1.14rem 0 0.912rem 0;">
+                        <form>
+                            <input id="check" type="checkbox" name="armed_door" value="on"/>
+                            <label for="check">Enable Alarm on ring removal</label>
+                        </form>
+                    </div>
+                </div>
+            </li>
+            <!--<li class="collection-item"></li>
+            <li class="collection-item">Alvin</li>
+            <li class="collection-item">Alvin</li>-->
+        </ul>
+
+    </div>
+
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#b').click(function () {
+            $('.led-green').toggleClass("led-red")
+        })
+        var audio = new Audio('alarm.mp3');
+        var socket = io();
+        // $('#stop').on('click',function(e){
+        //     e.preventDefault();
+        //     socket.emit('message','stop');
+        // });
+        // $('#start').on('click',function(e){
+        //     e.preventDefault();
+        //     socket.emit('message','start');
+        // })
+        //   $('#stop').on('click',function(e){
+        //     e.preventDefault();
+        //     socket.emit('message','stop');
+        // })
+        function openDoor() {
+            $(".thumb").addClass("thumbOpened");
+        }
+
+        function closeDoor() {
+            $(".thumb").removeClass("thumbOpened");
+        }
+
+        $('#button').on('click', function () {
+            socket.emit('stop', 'stop');
+            return false;
+        })
+        $('#check').on("click", function () {
+            if ($('#check').is(':checked')) {
+
+                armRingDoor()
+            }
+        })
+
+        function armRingDoor() {
+
+            socket.on('message', function (msg) {
+
+                if (msg === "ring_detouched") {
+                    $('.led-green').toggleClass("led-red")
+                    if ($('#check').is(':checked')) {
+                        audio.play();
+                        audio.addEventListener('ended', function () {
+                            audio.currentTime = 0;
+                            audio.play();
+                        }, false);
+                    }
+                    //openDoor();
+                }
+                if (msg === "ring_touch") {
+                    $('.led-green').toggleClass("led-red")
+                    openDoor();
+                }
+                var firstTime = true;
+                if (msg === "ring_placed") {
+                    // if(clock_door){
+                    //     socket.emit('message','start');
+                    // }
+                    console.log(msg)
+                    closeDoor();
+                    $('.led-green').toggleClass("led-red")
+                    firstTime = false;
+                    audio.pause()
+                }
+
+                if ($('#messages').height() > 800) {
+                    $('#messages').html("")
+                }
+                if (msg === "ring_placed") {
+                    $('#messages').append($('<li>').text("δαχτυλιδι βγηκε"));
+                } else {
+                    $('#messages').append($('<li>').text(msg));
+                }
+
+
+            });
+            // socket.on('news',function(msg){
+            //     if(msg.indexOf("opened")>-1) openDoor();
+            //       $('#messages').html($('<li>').text("door "+msg));
+            //       console.log(msg);
+            // })
+            // socket.on('chat',function(msg){
+
+            //       $('#messages').html($('<li>').text("door"+msg));
+            //       console.log(msg);
+            // })
+        }
+
+    })
+</script>
+</div>
+</body>
+
+</html>
